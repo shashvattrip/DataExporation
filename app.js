@@ -11,6 +11,13 @@ var rest = require('./routes/rest');
 var http = require('http');
 var path = require('path');
 var assert = require('assert')
+var bodyParser = require('body-parser');
+var favicon = require('serve-favicon');
+var methodOverride = require('method-override');
+var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session');
+//previously logger
+var morgan = require('morgan')
 //var process = require('process')
 var crossfilter = require("./crossfilter").crossfilter;
 var fs = require('fs');
@@ -24,14 +31,16 @@ var app = express();
 app.set('port', 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
+//TODO: link to favicon.ico
+// app.use(favicon());
+app.use(morgan('dev'));
 
-app.use(express.cookieParser('S3CRE7'));
-app.use(express.cookieSession());
-app.use(app.router);
+app.use(bodyParser.json());
+app.use(methodOverride());
+
+app.use(cookieParser('S3CRE7'));
+app.use(cookieSession({keys: ['key1', 'key2']}));
+// app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 
